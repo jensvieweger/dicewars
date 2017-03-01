@@ -3,5 +3,10 @@ name = "dicewars"
 version = "0.1.0"
 authors = ["Jens Vieweger <jens.vieweger@gmx.de>"]
 
+[[bin]]
+name = "dw"
+
+
 [dependencies]
 rand = "0.3"
+ansi_term = "0.9"
