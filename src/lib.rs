@@ -79,7 +79,19 @@ impl Map {
             fields.push(column);
         }
         
-        Map { x_size: x_size, y_size: y_size, fields:fields }
+        let mut map:Map = Map { x_size: x_size, y_size: y_size, fields:fields }; 
+        map.sanitize_map();
+        map
+    }
+    
+    /// after initial generation, this function makes sure that the generated map is actually playable
+    /// here: all non-blocked fields must be connected
+    fn sanitize_map(&mut self) -> &mut Map {
+        /* FIXME: implement */
+        self.fields[0][0].num_dices = 1;
+        self
+    }
+    
     }
 }
 
