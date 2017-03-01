@@ -46,6 +46,11 @@ impl Field {
     }
 }
 
+/// Describes the shape of the fields, i.e. how many direct neighbours a field has 
+pub enum Shape {
+    Square,
+    //Hexagon,
+}
 /// Struct holding the map information
 pub struct Map {
     /// How many fields along the X-Axis
