@@ -1,7 +1,10 @@
 extern crate rand;
+extern crate ansi_term;
 
 
 use rand::Rng;
+use ansi_term::Colour::*;
+
 
 /// Enum holding information about the type of a field.
 pub enum Faction {
@@ -92,6 +95,23 @@ impl Map {
         self
     }
     
+    pub fn pretty_print(&self) {
+        let borders = "╔═╗║╝╚╟╢╤╧│─┼";
+        // ╔═╤═╤═╤═╤═╗
+        // ║1│2│5│-│4║
+        // ╟─┼─┼─┼─┼─╢
+        // ║2│4│6│-│-║
+        // ╚═╧═╧═╧═╧═╝
+        
+        for y in 0..self.y_size-1 {
+            for x in 0..self.x_size-1 {
+                match self.fields[x as usize][y as usize].faction {
+                    Faction::Blocked => print!("{}     ", Red.paint("-")),
+                    Faction::Player{id: id} => print!("{} ({}) ", Green.paint(self.fields[x as usize][y as usize].num_dices.to_string()), id),                   
+                };
+            }
+            println!("");
+        }
     }
 }
 
@@ -126,5 +146,9 @@ impl Game {
     
     pub fn get_dices_of_first_field(&self) -> u8 {
         self.map.fields[0][0].num_dices
+    }
+    
+    pub fn print(&self) {
+        self.map.pretty_print();
     }
 }
