@@ -15,6 +15,11 @@ pub enum Faction {
 }
 
 impl Faction {
+    /// Creates a new faction object.
+    ///
+    /// Actual faction is randomized.
+    ///
+    /// * `max_players` - How many distinct player IDs are there.
     pub fn new(max_players: u8) -> Faction {
         let rng_result = rand::thread_rng().gen_range(0,
                                                       if max_players == 255 {
@@ -60,7 +65,6 @@ impl Field {
 /// Describes the shape of the fields, i.e. how many direct neighbours a field has
 pub enum Shape {
     Square,
-    //Hexagon,
 }
 /// Struct holding the map information
 pub struct Map {
@@ -70,7 +74,7 @@ pub struct Map {
     /// How many fields along the Y-Axis
     y_size: u8,
 
-    /// The actual map of the game.
+    /// The actual map of the game. use [y][x] indexing
     fields: Vec<Vec<Field>>,
 }
 
@@ -100,20 +104,21 @@ impl Map {
     }
 
     /// after initial generation, this function makes sure that the generated map is actually playable
-    /// here: all non-blocked fields must be connected
+    /// here: all non-blocked fields must be connected and each player must have ~ the same amount of dice
     fn sanitize_map(&mut self) -> &mut Map {
         /* FIXME: implement */
         self.fields[0][0].num_dices = 1;
         self
     }
 
+    /// Prints the map to stdout, which should then look like this:
+    /// ╔═╤═╤═╤═╤═╗
+    /// ║1│2│5│-│4║
+    /// ╟─┼─┼─┼─┼─╢
+    /// ║2│4│6│-│-║
+    /// ╚═╧═╧═╧═╧═╝
+    ///
     pub fn pretty_print(&self) {
-        let borders = "╔═╗║╝╚╟╢╤╧│─┼";
-        // ╔═╤═╤═╤═╤═╗
-        // ║1│2│5│-│4║
-        // ╟─┼─┼─┼─┼─╢
-        // ║2│4│6│-│-║
-        // ╚═╧═╧═╧═╧═╝
 
         for y in 0..self.y_size - 1 {
             for x in 0..self.x_size - 1 {
