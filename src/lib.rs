@@ -101,6 +101,30 @@ pub struct Map {
 }
 
 impl Map {
+    /// Initialises an empty map.
+    ///
+    /// Each field is blocked, with 0 dice on it.
+    ///
+    /// * `size` - Dimension of the map in number of fields per axis.
+    pub fn new_empty(size: Point) -> Map {
+        assert_ne!(size.x, 0);
+        assert_ne!(size.y, 0);
+
+        let mut fields: Vec<Vec<Field>> = Vec::new();
+        for _ in 0..size.y {
+            let mut row: Vec<Field> = Vec::new();
+            for _ in 0..size.x {
+                row.push(Field::default());
+            }
+            fields.push(row);
+        }
+
+        Map {
+            size: size,
+            fields: fields,
+        }
+    }
+
     /// Initialises a randomized map.
     ///
     /// Each field is randomly generated, resulting in a playable map
@@ -213,6 +237,7 @@ impl Map {
 
     }
 }
+
 
 /// Struct holding information about the Game itself
 pub struct Game {
