@@ -78,41 +78,53 @@ impl Default for Field {
     }
 }
 
+/// Describes a point in 2D space
+pub struct Point {
+    /// The points location along the X-axis.
+    pub x: u8,
+
+    /// The points location along the Y-axis.
+    pub y: u8,
+}
+
 /// Describes the shape of the fields, i.e. how many direct neighbours a field has
 pub enum Shape {
     Square,
 }
 /// Struct holding the map information
 pub struct Map {
-    /// How many fields along the X-Axis
-    x_size: u8,
-
-    /// How many fields along the Y-Axis
-    y_size: u8,
+    /// How many fields on each axis
+    size: Point,
 
     /// The actual map of the game. use [y][x] indexing
     fields: Vec<Vec<Field>>,
 }
 
 impl Map {
-    pub fn new(max_players: u8, max_dice: u8, x_size: u8, y_size: u8) -> Map {
-        assert_ne!(max_players, 0);
+    /// Initialises a randomized map.
+    ///
+    /// Each field is randomly generated, resulting in a playable map
+    ///
+    /// * `players` - Number of player to distribute.
+    /// * `max_dice` - Number of dice, a field may have at max.
+    /// * `size` - Dimension of the map in number of fields per axis.
+    pub fn new(players: u8, max_dice: u8, size: Point) -> Map {
+        assert_ne!(players, 0);
         assert_ne!(max_dice, 0);
-        assert_ne!(x_size, 0);
-        assert_ne!(y_size, 0);
+        assert_ne!(size.x, 0);
+        assert_ne!(size.y, 0);
 
         let mut fields: Vec<Vec<Field>> = Vec::new();
-        for _ in 0..y_size {
+        for _ in 0..size.y {
             let mut row: Vec<Field> = Vec::new();
-            for _ in 0..x_size {
-                row.push(Field::new(max_players, max_dice));
+            for _ in 0..size.x {
+                row.push(Field::new(players, max_dice));
             }
             fields.push(row);
         }
 
         let mut map: Map = Map {
-            x_size: x_size,
-            y_size: y_size,
+            size: size,
             fields: fields,
         };
         map.sanitize_map();
@@ -213,11 +225,11 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(max_players: u8, max_dice: u8, x_size: u8, y_size: u8) -> Game {
+    pub fn new(max_players: u8, max_dice: u8, size: Point) -> Game {
         Game {
             num_players: max_players,
             max_dice: max_dice,
-            map: Map::new(max_players, max_dice, x_size, y_size),
+            map: Map::new(max_players, max_dice, size),
             round: 0,
             turn: Faction::Player { id: 1 },
         }
