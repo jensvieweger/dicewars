@@ -45,6 +45,12 @@ impl Faction {
     }
 }
 
+impl Default for Faction {
+    fn default() -> Faction {
+        Faction::Blocked
+    }
+}
+
 /// Information about a single field of the map.
 pub struct Field {
     /// Stores the ID of the faction currently occupying this field.
@@ -59,6 +65,15 @@ impl Field {
         Field {
             faction: Faction::new(max_players),
             num_dice: rand::thread_rng().gen_range(0, max_dice + 1),
+        }
+    }
+}
+
+impl Default for Field {
+    fn default() -> Field {
+        Field {
+            faction: Faction::default(),
+            num_dice: 0,
         }
     }
 }
