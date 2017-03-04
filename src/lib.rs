@@ -22,6 +22,7 @@ impl Faction {
     ///
     /// * `max_players` - How many distinct player IDs are there.
     pub fn new(max_players: u8) -> Faction {
+        /* FIXME: have percentage of blocked fields be configurable */
         let rng_result = rand::thread_rng().gen_range(0,
                                                       if max_players == 255 {
                                                           max_players
