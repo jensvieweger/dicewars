@@ -64,7 +64,7 @@ impl Field {
     pub fn new(max_players: u8, max_dice: u8) -> Field {
         Field {
             faction: Faction::new(max_players),
-            num_dice: rand::thread_rng().gen_range(0, max_dice + 1),
+            num_dice: rand::thread_rng().gen_range(1, max_dice + 1),
         }
     }
 }
