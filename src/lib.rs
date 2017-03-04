@@ -149,17 +149,24 @@ impl Map {
     ///
     pub fn pretty_print(&self) {
         // header
-        print!("╔");
+        print!("  ");
+        for n_col in 0..self.fields[0].len() {
+            print!("{} ", n_col.to_string());
+        }
+        println!("");
+
+        print!(" ╔");
         for _ in 0..self.fields[0].len() - 1 {
-            print!("═╤");
+            print!("═╪");
         }
         println!("═╗");
 
         let mut row_iter = self.fields.iter().peekable();
         let mut row = row_iter.next().expect("Invalid map (no row available)");
+        let mut n_row = 0;
 
         loop {
-            print!("║");
+            print!("{}║", n_row.to_string());
 
             let mut field_iter = row.iter().peekable();
             let mut field = field_iter.next().expect("Invalid map (row is empty)");
@@ -185,7 +192,7 @@ impl Map {
             match row_iter.peek() {
                 Some(_) => {
                     // between the lines
-                    print!("╟");
+                    print!("─╫");
                     for _ in 0..self.fields[0].len() - 1 {
                         print!("─┼");
                     }
@@ -194,10 +201,11 @@ impl Map {
                 None => break,
             }
             row = row_iter.next().expect("Invalid map (no row available)");
+            n_row += 1;
         }
 
         // footer
-        print!("╚");
+        print!(" ╚");
         for _ in 0..self.fields[0].len() - 1 {
             print!("═╧");
         }
