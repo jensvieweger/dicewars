@@ -9,7 +9,11 @@ use ansi_term::Colour::*;
 mod error;
 pub use error::{ErrorType, GameResult, GameError};
 
+<<<<<<< HEAD
 #[derive(Debug, PartialEq)]
+=======
+#[derive(Debug, PartialEq, Copy, Clone)]
+>>>>>>> 66b7cb8
 /// Enum holding information about the type of a field.
 pub enum Faction {
     /// Field is blocked., i.e. can't be occupied.
@@ -55,6 +59,7 @@ impl Default for Faction {
     }
 }
 
+#[derive(Debug, PartialEq, Copy, Clone)]
 /// Information about a single field of the map.
 pub struct Field {
     /// Stores the ID of the faction currently occupying this field.
@@ -82,6 +87,7 @@ impl Default for Field {
     }
 }
 
+#[derive(Debug, PartialEq, Copy, Clone)]
 /// Describes a point in 2D space
 pub struct Point {
     /// The points location along the X-axis.
@@ -171,10 +177,28 @@ impl Map {
 
     /// Retrieves the field at the given coordinate.
     ///
+<<<<<<< HEAD
     /// Returns a reference to the field.
     ///
     /// * `coord` - Coordinate of the field to retrieve.
     pub fn get_field(&mut self, coord: Point) -> &mut Field {
+=======
+    /// Returns a field.
+    ///
+    /// * `coord` - Coordinate of the field to retrieve.
+    pub fn get_field(self, coord: Point) -> Field {
+        assert!(coord.x < self.size.x);
+        assert!(coord.y < self.size.y);
+        self.fields[coord.y as usize][coord.x as usize]
+    }
+
+    /// Retrieves the field at the given coordinate.
+    ///
+    /// Returns a mutable reference to the field.
+    ///
+    /// * `coord` - Coordinate of the field to retrieve.
+    pub fn get_field_mut(&mut self, coord: Point) -> &mut Field {
+>>>>>>> 66b7cb8
         assert!(coord.x < self.size.x);
         assert!(coord.y < self.size.y);
         &mut self.fields[coord.y as usize][coord.x as usize]
@@ -318,11 +342,22 @@ impl Game {
                 num_dice: attacker.num_dice - 1,
                 faction: attacker.faction,
             };*/
+<<<<<<< HEAD
             target.num_dice = attacker.num_dice - 1;
             //target.faction = attacker.faction;
         }
         attacker.num_dice = 1;
 
+=======
+            let &mut target_mut = self.map.get_field_mut(atk_to);
+            target_mut.num_dice = attacker.num_dice - 1;
+            target_mut.faction = attacker.faction;
+        }
+        {
+            let attacker_mut = self.map.get_field_mut(atk_from);
+            attacker_mut.num_dice = 1;
+        }
+>>>>>>> 66b7cb8
         Ok(())
     }
 
