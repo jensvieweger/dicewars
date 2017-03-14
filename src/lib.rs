@@ -4,9 +4,12 @@ extern crate ansi_term;
 
 use rand::Rng;
 use ansi_term::Colour::*;
-//use ansi_term::Style;
 
+#[macro_use]
+mod error;
+pub use error::{ErrorType, GameResult, GameError};
 
+#[derive(Debug, PartialEq, Copy, Clone)]
 /// Enum holding information about the type of a field.
 pub enum Faction {
     /// Field is blocked., i.e. can't be occupied.
@@ -52,6 +55,7 @@ impl Default for Faction {
     }
 }
 
+#[derive(Debug, PartialEq, Copy, Clone)]
 /// Information about a single field of the map.
 pub struct Field {
     /// Stores the ID of the faction currently occupying this field.
@@ -79,6 +83,7 @@ impl Default for Field {
     }
 }
 
+#[derive(Debug, PartialEq, Copy, Clone)]
 /// Describes a point in 2D space
 pub struct Point {
     /// The points location along the X-axis.
@@ -160,9 +165,32 @@ impl Map {
     /// here: all non-blocked fields must be connected and each player must have ~ the same amount of dice
     fn sanitize_map(&mut self) -> &mut Map {
         /* FIXME: implement */
+        //unimplemented!();
         //self.fields[0][0].num_dice = 1;
         //println!("{} {}", self.fields.len(), self.fields[0].len());
         self
+    }
+
+    /// Retrieves the field at the given coordinate.
+    ///
+    /// Returns a field.
+    ///
+    /// * `coord` - Coordinate of the field to retrieve.
+    pub fn get_field(self, coord: Point) -> Field {
+        assert!(coord.x < self.size.x);
+        assert!(coord.y < self.size.y);
+        self.fields[coord.y as usize][coord.x as usize]
+    }
+
+    /// Retrieves the field at the given coordinate.
+    ///
+    /// Returns a mutable reference to the field.
+    ///
+    /// * `coord` - Coordinate of the field to retrieve.
+    pub fn get_field_mut(&mut self, coord: Point) -> &mut Field {
+        assert!(coord.x < self.size.x);
+        assert!(coord.y < self.size.y);
+        &mut self.fields[coord.y as usize][coord.x as usize]
     }
 
     /// Prints the map to stdout, which should then look like this:
@@ -280,5 +308,45 @@ impl Game {
             }
         }
         self.map.pretty_print();
+    }
+
+    pub fn turn(&mut self, atk_from: Point, atk_to: Point) -> GameResult<()> {
+        let attacker = self.map.get_field(atk_from);
+        let target = self.map.get_field(atk_to);
+
+        if attacker.num_dice <= 1 {
+            return Err(GameError::new(ErrorType::InvalidAttacker,
+                                      "Attacker must have more than 1 dice."));
+        }
+        if attacker.faction == target.faction {
+            return Err(GameError::new(ErrorType::InvalidTarget,
+                                      "Target is of the same faction as the attacker."));
+        }
+
+        let attacker_strength = self.roll_dice(attacker.num_dice);
+        let target_strength = self.roll_dice(target.num_dice);
+
+        if attacker_strength > target_strength {
+            /*target = Field {
+                num_dice: attacker.num_dice - 1,
+                faction: attacker.faction,
+            };*/
+            let &mut target_mut = self.map.get_field_mut(atk_to);
+            target_mut.num_dice = attacker.num_dice - 1;
+            target_mut.faction = attacker.faction;
+        }
+        {
+            let attacker_mut = self.map.get_field_mut(atk_from);
+            attacker_mut.num_dice = 1;
+        }
+        Ok(())
+    }
+
+    fn roll_dice(&self, numdice: u8) -> usize {
+        let mut result = 0;
+        for _ in 0..numdice {
+            result += rand::thread_rng().gen_range(1, 6 + 1);
+        }
+        result
     }
 }
