@@ -10,3 +10,4 @@ name = "dw"
 [dependencies]
 rand = "0.3"
 ansi_term = "0.9"
+termion = "1.0"
