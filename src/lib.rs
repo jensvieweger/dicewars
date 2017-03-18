@@ -176,7 +176,7 @@ impl Map {
     /// Returns a field.
     ///
     /// * `coord` - Coordinate of the field to retrieve.
-    pub fn get_field(self, coord: Point) -> Field {
+    pub fn get_field(&self, coord: Point) -> Field {
         assert!(coord.x < self.size.x);
         assert!(coord.y < self.size.y);
         self.fields[coord.y as usize][coord.x as usize]
@@ -331,12 +331,12 @@ impl Game {
                 num_dice: attacker.num_dice - 1,
                 faction: attacker.faction,
             };*/
-            let &mut target_mut = self.map.get_field_mut(atk_to);
+            let mut target_mut = self.map.get_field_mut(atk_to);
             target_mut.num_dice = attacker.num_dice - 1;
             target_mut.faction = attacker.faction;
         }
         {
-            let attacker_mut = self.map.get_field_mut(atk_from);
+            let mut attacker_mut = self.map.get_field_mut(atk_from);
             attacker_mut.num_dice = 1;
         }
         Ok(())
