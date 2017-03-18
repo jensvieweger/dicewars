@@ -318,6 +318,16 @@ impl Game {
             return Err(GameError::new(ErrorType::InvalidAttacker,
                                       "Attacker must have more than 1 dice."));
         }
+        match target.faction {
+            y if y == attacker.faction => {
+                return Err(GameError::new(ErrorType::InvalidTarget,
+                                          "Target is of the same faction as the attacker."))
+            }
+            Faction::Blocked => {
+                return Err(GameError::new(ErrorType::InvalidTarget, "Can't attack blocked field."))
+            }
+            _ => {}
+        }
         if attacker.faction == target.faction {
             return Err(GameError::new(ErrorType::InvalidTarget,
                                       "Target is of the same faction as the attacker."));
