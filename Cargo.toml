@@ -7,6 +7,6 @@ authors = ["Jens Vieweger <jens.vieweger@gmx.de>"]
 #name = "dw"
 
 [dependencies]
-rand = "0.3"
-ansi_term = "0.9"
+rand = "0.8.4"
+ansi_term = "0.12.1"
 termion = "1.0"

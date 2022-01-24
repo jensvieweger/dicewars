@@ -25,16 +25,17 @@ impl Faction {
     ///
     /// * `max_players` - How many distinct player IDs are there.
     pub fn new(max_players: u8) -> Faction {
+        let mut rng = rand::thread_rng();
         /* FIXME: have percentage of blocked fields be configurable */
-        let rng_result = rand::thread_rng().gen_range(0,
-                                                      if max_players == 255 {
-                                                          max_players
-                                                      } else {
-                                                          max_players + 1
-                                                      });
+        let rng_result = rng.gen_range(std::ops::Range{start: 0, end:
+                                                                        if max_players == 255 {
+                                                                            max_players
+                                                                        } else {
+                                                                            max_players + 1
+                                                                        }});
 
         if max_players >= 255 {
-            if rand::thread_rng().gen_range(0, 256) == 0 {
+            if rng.gen_range(0..256) == 0 {
                 Faction::Blocked
             } else {
                 Faction::Player { id: rng_result }
@@ -69,7 +70,7 @@ impl Field {
     pub fn new(max_players: u8, max_dice: u8) -> Field {
         Field {
             faction: Faction::new(max_players),
-            num_dice: rand::thread_rng().gen_range(1, max_dice + 1),
+            num_dice: rand::thread_rng().gen_range(std::ops::Range{start: 1, end: max_dice + 1}),
         }
     }
 }
@@ -355,7 +356,7 @@ impl Game {
     fn roll_dice(&self, numdice: u8) -> usize {
         let mut result = 0;
         for _ in 0..numdice {
-            result += rand::thread_rng().gen_range(1, 6 + 1);
+            result += rand::thread_rng().gen_range(std::ops::Range{start: 1, end: 6 + 1});
         }
         result
     }
