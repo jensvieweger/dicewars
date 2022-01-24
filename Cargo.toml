@@ -3,9 +3,8 @@ name = "dicewars"
 version = "0.1.0"
 authors = ["Jens Vieweger <jens.vieweger@gmx.de>"]
 
-[[bin]]
-name = "dw"
-
+#[[bin]]
+#name = "dw"
 
 [dependencies]
 rand = "0.3"
