@@ -4,9 +4,9 @@ extern crate termion;
 use dicewars::{Game, Point};
 
 use termion::clear;
-use termion::raw::IntoRawMode;
-use termion::input::TermRead;
-use termion::event::Key;
+
+
+
 
 use std::io::{self, Read, Write};
 
