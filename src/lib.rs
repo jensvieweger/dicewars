@@ -1,9 +1,11 @@
 extern crate rand;
-extern crate ansi_term;
+extern crate colored;
 
+
+use std::u8;
 
 use rand::Rng;
-use ansi_term::Colour::*;
+use colored::*;
 
 #[macro_use]
 mod error;
@@ -98,6 +100,17 @@ pub struct Point {
 pub enum Shape {
     Square,
 }
+
+fn rgb_get_r_from_id(id: u8) -> u8 {
+    return (((id * 25) % 255) >> 5) * 32;
+}
+fn rgb_get_g_from_id(id: u8) -> u8 {
+    return ((((id * 25) % 255) & 28) >> 2) * 32;
+}
+fn rgb_get_b_from_id(id: u8) -> u8 {
+    return (((id * 25) % 255) & 3) * 64;
+}
+
 /// Struct holding the map information
 pub struct Map {
     /// How many fields on each axis
@@ -227,10 +240,11 @@ impl Map {
 
             loop {
                 match field.faction {
-                    Faction::Blocked => print!("{}", Fixed(255).bold().paint("-")),
+                    Faction::Blocked => print!("{}", "-".white().bold()),
                     Faction::Player { id } => {
                         //print!("{} ({}) ", Green.paint(field.num_dice.to_string()), id)
-                        print!("{}", Fixed(id).paint(field.num_dice.to_string()))
+                        // TODO: try to get some nice looking palette (as ansi_term's 'Fixed(u8)' did)
+                        print!("{}", field.num_dice.to_string().truecolor(rgb_get_r_from_id(id), rgb_get_g_from_id(id),rgb_get_b_from_id(id)))
                     }
                 };
                 match field_iter.peek() {
@@ -303,7 +317,7 @@ impl Game {
             Faction::Blocked => panic!("the turn must be on a valid faction"),
             Faction::Player { id } => {
                 println!("Player: {}/{}, round: {}",
-                         Fixed(id).paint(id.to_string()),
+                         id.to_string().truecolor(rgb_get_r_from_id(id), rgb_get_g_from_id(id),rgb_get_b_from_id(id)),
                          self.num_players,
                          self.round);
             }
