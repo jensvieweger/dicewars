@@ -47,5 +47,7 @@ fn main() {
         }
         write!(stdout, "{}", clear::All).unwrap();
         game.print();
+
+        // tick(faction)
     }
 }
