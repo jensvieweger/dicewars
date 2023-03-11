@@ -91,7 +91,7 @@ impl Game {
         Ok(())
     }
 
-    pub fn finlaize_turn(&mut self) {
+    pub fn finalize_turn(&mut self) {
         let mut row_iter = self.map.fields.iter_mut();
         let row = row_iter.next().expect("Invalid map (no row available)");
 
