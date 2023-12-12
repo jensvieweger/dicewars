@@ -1,7 +1,7 @@
 [package]
 name = "dicewars"
 version = "0.1.0"
-authors = ["Jens Vieweger <jens.vieweger@gmx.de>"]
+authors = ["Jens Vieweger <jensvieweger@users.noreply.github.com>"]
 
 [dependencies]
 rand = "0.8.4"
